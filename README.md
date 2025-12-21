@@ -2,16 +2,12 @@
 
 A simple and elegant QR Code Generator web application.
 
-![Python](https://img.shields.io/badge/Python-3.x-blue)
-![Flask](https://img.shields.io/badge/Flask-3.x-green)
-![License](https://img.shields.io/badge/License-MIT-yellow)
-
 ## Features
 
-- 🚀 Instant QR code generation
-- 💾 Download QR codes as PNG
-- 🎨 Modern dark theme UI
-- ✨ Animated background effects
+-  Instant QR code generation
+-  Download QR codes as PNG
+-  Modern dark theme UI
+-  Animated background effects
 
 ## Installation
 
