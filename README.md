@@ -34,7 +34,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-5. Open http://127.0.0.1:5000 in your browser
+5. Open the URL shown in the terminal (usually http://127.0.0.1:5000)
 
 ## Technologies
 
