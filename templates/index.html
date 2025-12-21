@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QrGenerator</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='Gemini_Generated_Image_7cjau47cjau47cja(1).png') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f4e 50%, #0d1333 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Small floating dots */
+        .small-objects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .small-dot {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatSmall 20s infinite ease-in-out;
+        }
+
+        .small-dot:nth-child(1) { width: 6px; height: 6px; background: rgba(59, 130, 246, 0.4); top: 10%; left: 5%; animation-delay: 0s; }
+        .small-dot:nth-child(2) { width: 4px; height: 4px; background: rgba(139, 92, 246, 0.5); top: 20%; left: 15%; animation-delay: -2s; }
+        .small-dot:nth-child(3) { width: 8px; height: 8px; background: rgba(6, 182, 212, 0.3); top: 15%; left: 25%; animation-delay: -4s; }
+        .small-dot:nth-child(4) { width: 5px; height: 5px; background: rgba(59, 130, 246, 0.5); top: 8%; left: 40%; animation-delay: -6s; }
+        .small-dot:nth-child(5) { width: 7px; height: 7px; background: rgba(139, 92, 246, 0.4); top: 25%; left: 55%; animation-delay: -8s; }
+        .small-dot:nth-child(6) { width: 4px; height: 4px; background: rgba(6, 182, 212, 0.5); top: 12%; left: 70%; animation-delay: -10s; }
+        .small-dot:nth-child(7) { width: 6px; height: 6px; background: rgba(59, 130, 246, 0.3); top: 18%; left: 85%; animation-delay: -12s; }
+        .small-dot:nth-child(8) { width: 5px; height: 5px; background: rgba(139, 92, 246, 0.5); top: 5%; left: 92%; animation-delay: -14s; }
+        
+        .small-dot:nth-child(9) { width: 4px; height: 4px; background: rgba(59, 130, 246, 0.5); top: 35%; left: 3%; animation-delay: -1s; }
+        .small-dot:nth-child(10) { width: 6px; height: 6px; background: rgba(6, 182, 212, 0.4); top: 45%; left: 8%; animation-delay: -3s; }
+        .small-dot:nth-child(11) { width: 5px; height: 5px; background: rgba(139, 92, 246, 0.3); top: 55%; left: 12%; animation-delay: -5s; }
+        .small-dot:nth-child(12) { width: 7px; height: 7px; background: rgba(59, 130, 246, 0.4); top: 40%; left: 88%; animation-delay: -7s; }
+        .small-dot:nth-child(13) { width: 4px; height: 4px; background: rgba(6, 182, 212, 0.5); top: 50%; left: 95%; animation-delay: -9s; }
+        .small-dot:nth-child(14) { width: 6px; height: 6px; background: rgba(139, 92, 246, 0.4); top: 60%; left: 90%; animation-delay: -11s; }
+        
+        .small-dot:nth-child(15) { width: 5px; height: 5px; background: rgba(59, 130, 246, 0.5); top: 70%; left: 5%; animation-delay: -2s; }
+        .small-dot:nth-child(16) { width: 7px; height: 7px; background: rgba(139, 92, 246, 0.3); top: 75%; left: 15%; animation-delay: -4s; }
+        .small-dot:nth-child(17) { width: 4px; height: 4px; background: rgba(6, 182, 212, 0.5); top: 85%; left: 25%; animation-delay: -6s; }
+        .small-dot:nth-child(18) { width: 6px; height: 6px; background: rgba(59, 130, 246, 0.4); top: 90%; left: 40%; animation-delay: -8s; }
+        .small-dot:nth-child(19) { width: 5px; height: 5px; background: rgba(139, 92, 246, 0.5); top: 80%; left: 55%; animation-delay: -10s; }
+        .small-dot:nth-child(20) { width: 8px; height: 8px; background: rgba(6, 182, 212, 0.3); top: 88%; left: 70%; animation-delay: -12s; }
+        .small-dot:nth-child(21) { width: 4px; height: 4px; background: rgba(59, 130, 246, 0.5); top: 75%; left: 82%; animation-delay: -14s; }
+        .small-dot:nth-child(22) { width: 6px; height: 6px; background: rgba(139, 92, 246, 0.4); top: 92%; left: 90%; animation-delay: -16s; }
+
+        /* Small stars */
+        .small-star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        .small-star:nth-child(23) { top: 8%; left: 20%; animation-delay: 0s; }
+        .small-star:nth-child(24) { top: 15%; left: 45%; animation-delay: 0.5s; }
+        .small-star:nth-child(25) { top: 22%; left: 75%; animation-delay: 1s; }
+        .small-star:nth-child(26) { top: 35%; left: 10%; animation-delay: 1.5s; }
+        .small-star:nth-child(27) { top: 48%; left: 92%; animation-delay: 2s; }
+        .small-star:nth-child(28) { top: 65%; left: 8%; animation-delay: 2.5s; }
+        .small-star:nth-child(29) { top: 72%; left: 35%; animation-delay: 0.3s; }
+        .small-star:nth-child(30) { top: 85%; left: 60%; animation-delay: 0.8s; }
+        .small-star:nth-child(31) { top: 78%; left: 88%; animation-delay: 1.3s; }
+        .small-star:nth-child(32) { top: 5%; left: 60%; animation-delay: 1.8s; }
+        .small-star:nth-child(33) { top: 42%; left: 5%; animation-delay: 2.3s; }
+        .small-star:nth-child(34) { top: 58%; left: 95%; animation-delay: 0.7s; }
+        .small-star:nth-child(35) { top: 95%; left: 15%; animation-delay: 1.2s; }
+        .small-star:nth-child(36) { top: 30%; left: 95%; animation-delay: 1.7s; }
+
+        /* Small squares */
+        .small-square {
+            position: absolute;
+            border: 1px solid;
+            animation: floatSquare 25s infinite ease-in-out;
+        }
+
+        .small-square:nth-child(37) { width: 8px; height: 8px; border-color: rgba(59, 130, 246, 0.3); top: 12%; left: 35%; animation-delay: 0s; transform: rotate(45deg); }
+        .small-square:nth-child(38) { width: 6px; height: 6px; border-color: rgba(139, 92, 246, 0.4); top: 28%; left: 80%; animation-delay: -5s; transform: rotate(15deg); }
+        .small-square:nth-child(39) { width: 10px; height: 10px; border-color: rgba(6, 182, 212, 0.3); top: 65%; left: 20%; animation-delay: -10s; transform: rotate(30deg); }
+        .small-square:nth-child(40) { width: 7px; height: 7px; border-color: rgba(59, 130, 246, 0.4); top: 82%; left: 78%; animation-delay: -15s; transform: rotate(60deg); }
+
+        @keyframes floatSmall {
+            0%, 100% { transform: translate(0, 0); opacity: 0.5; }
+            25% { transform: translate(5px, -8px); opacity: 0.8; }
+            50% { transform: translate(-3px, 5px); opacity: 0.4; }
+            75% { transform: translate(8px, 3px); opacity: 0.7; }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        @keyframes floatSquare {
+            0%, 100% { transform: rotate(45deg) translate(0, 0); }
+            25% { transform: rotate(90deg) translate(10px, -10px); }
+            50% { transform: rotate(135deg) translate(-5px, 5px); }
+            75% { transform: rotate(180deg) translate(5px, 10px); }
+        }
+
+        /* Grid lines */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        .container {
+            background: rgba(20, 25, 60, 0.9);
+            border-radius: 24px;
+            padding: 45px;
+            box-shadow: 
+                0 25px 80px rgba(0, 0, 0, 0.5), 
+                0 0 50px rgba(59, 130, 246, 0.1);
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(20px);
+        }
+
+        h1 {
+            color: #e0e7ff;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            width: 45px;
+            height: 45px;
+            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3));
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        input[type="url"], input[type="text"] {
+            width: 100%;
+            padding: 18px 20px 18px 50px;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 14px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+            background: rgba(15, 20, 50, 0.8);
+            color: #e0e7ff;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        input[type="url"]::placeholder, input[type="text"]::placeholder {
+            color: #64748b;
+        }
+
+        input[type="url"]:focus, input[type="text"]:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+
+        button {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.5);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+            padding: 15px 0;
+            border-top: 1px solid rgba(59, 130, 246, 0.1);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #3b82f6;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .qr-result {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .qr-wrapper {
+            position: relative;
+            display: inline-block;
+            padding: 15px;
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        .qr-result img {
+            max-width: 220px;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .success-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            margin-top: 10px;
+        }
+
+        .download-btn:hover {
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .url-display {
+            background: rgba(15, 20, 50, 0.8);
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            word-break: break-all;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .url-icon {
+            color: #3b82f6;
+            flex-shrink: 0;
+        }
+
+        /* Features */
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #64748b;
+            font-size: 0.8rem;
+        }
+
+        .feature-icon {
+            color: #10b981;
+        }
+
+        /* Decorative line */
+        .decor-line {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #3b82f6, #8b5cf6, #06b6d4, transparent);
+            border-radius: 2px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Small floating objects -->
+    <div class="small-objects">
+        <!-- Small dots -->
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <div class="small-dot"></div>
+        <!-- Small stars -->
+        <div class="small-star"></div>
+        <div class="small-star"></div>
+        <div class="small-star"></div>
+        <div class="small-star"></div>
+        <div class="small-star"></div>
+        <div class="small-star"></div>
+        <div class="small-star"></div>
+        <div class="small-star"></div>
+        <div class="small-star"></div>
+        <div class="small-star"></div>
+        <div class="small-star"></div>
+        <div class="small-star"></div>
+        <div class="small-star"></div>
+        <div class="small-star"></div>
+        <!-- Small squares -->
+        <div class="small-square"></div>
+        <div class="small-square"></div>
+        <div class="small-square"></div>
+        <div class="small-square"></div>
+    </div>
+    
+    <div class="grid-overlay"></div>
+
+    <div class="container">
+        <div class="header-row">
+            <img src="{{ url_for('static', filename='Gemini_Generated_Image_7cjau47cjau47cja(1).png') }}" alt="QrGenerator Logo" class="logo">
+            <h1>QrGenerator</h1>
+        </div>
+        <p class="subtitle">Transform any URL into a scannable QR code instantly</p>
+        
+        <div class="decor-line"></div>
+        
+        <form method="POST" action="/">
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="text" name="url" placeholder="Paste your URL here..." 
+                           value="{{ url }}" required>
+                    <span class="input-icon">🔗</span>
+                </div>
+            </div>
+            <button type="submit">
+                <span class="btn-icon">⚡</span>
+                Generate QR Code
+            </button>
+        </form>
+
+        <div class="stats-row">
+            <div class="stat-item">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Free</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">&lt;1s</span>
+                <span class="stat-label">Generation</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">HD</span>
+                <span class="stat-label">Quality</span>
+            </div>
+        </div>
+
+        {% if qr_image %}
+        <div class="qr-result">
+            <div class="success-badge">
+                <span>✓</span> QR Code Generated Successfully
+            </div>
+            <div class="url-display">
+                <span class="url-icon">🔗</span>
+                <span>{{ url }}</span>
+            </div>
+            <div class="qr-wrapper">
+                <img src="data:image/png;base64,{{ qr_image }}" alt="QR Code">
+            </div>
+            <form method="POST" action="/download">
+                <input type="hidden" name="url" value="{{ url }}">
+                <button type="submit" class="download-btn">
+                    <span class="btn-icon">⬇️</span>
+                    Download PNG
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+        <div class="features">
+            <div class="feature">
+                <span class="feature-icon">✓</span>
+                <span>No signup</span>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">✓</span>
+                <span>High resolution</span>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">✓</span>
+                <span>Instant download</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
