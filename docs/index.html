@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QrGenerator</title>
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="icon" type="image/png" href="static/logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -252,6 +252,12 @@
             transform: translateY(0);
         }
 
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .btn-icon {
             font-size: 1.2rem;
         }
@@ -289,6 +295,7 @@
             margin-top: 30px;
             padding-top: 30px;
             border-top: 1px solid rgba(59, 130, 246, 0.2);
+            display: none;
         }
 
         .qr-wrapper {
@@ -428,22 +435,21 @@
 
     <div class="container">
         <div class="header-row">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="QrGenerator Logo" class="logo">
+            <img src="static/logo.png" alt="QrGenerator Logo" class="logo">
             <h1>QrGenerator</h1>
         </div>
         <p class="subtitle">Transform any URL into a scannable QR code instantly</p>
         
         <div class="decor-line"></div>
         
-        <form method="https://qrgenerator-5xxf.onrender.com" action="/">
+        <form id="qr-form">
             <div class="form-group">
                 <div class="input-wrapper">
-                    <input type="text" name="url" placeholder="Paste your URL here..." 
-                           value="{{ url }}" required>
+                    <input type="text" id="url-input" name="url" placeholder="Paste your URL here..." required>
                     <span class="input-icon">🔗</span>
                 </div>
             </div>
-            <button type="submit">
+            <button type="submit" id="generate-btn">
                 <span class="btn-icon">⚡</span>
                 Generate QR Code
             </button>
@@ -464,27 +470,22 @@
             </div>
         </div>
 
-        {% if qr_image %}
-        <div class="qr-result">
+        <div class="qr-result" id="qr-result">
             <div class="success-badge">
                 <span>✓</span> QR Code Generated Successfully
             </div>
             <div class="url-display">
                 <span class="url-icon">🔗</span>
-                <span>{{ url }}</span>
+                <span id="url-display-text"></span>
             </div>
             <div class="qr-wrapper">
-                <img src="data:image/png;base64,{{ qr_image }}" alt="QR Code">
+                <img id="qr-image" src="" alt="QR Code">
             </div>
-            <form method="POST" action="/download">
-                <input type="hidden" name="url" value="{{ url }}">
-                <button type="submit" class="download-btn">
-                    <span class="btn-icon">⬇️</span>
-                    Download PNG
-                </button>
-            </form>
+            <button type="button" id="download-btn" class="download-btn">
+                <span class="btn-icon">⬇️</span>
+                Download PNG
+            </button>
         </div>
-        {% endif %}
 
         <div class="features">
             <div class="feature">
@@ -501,5 +502,7 @@
             </div>
         </div>
     </div>
+
+    <script src="static/js/app.js"></script>
 </body>
 </html>
