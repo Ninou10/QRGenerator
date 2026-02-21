@@ -1,5 +1,4 @@
-// Configuration - Update this URL after deploying to Render
-const API_BASE_URL = 'https://qrgenerator-5xxf.onrender.com';
+const API_BASE_URL = 'https://qrgenerator-3292.onrender.com';
 
 // DOM Elements
 const form = document.getElementById('qr-form');
